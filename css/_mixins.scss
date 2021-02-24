@@ -1,0 +1,45 @@
+$mediaBreakpoints: (
+    mobile: 23.4375rem,
+    tablet: 48rem,
+    desktop: 64rem
+);
+
+@mixin heading {
+    font-family: $font-family;
+    color: $black;
+}
+
+@mixin bodyText {
+    font-family: $font-family;
+    color: $darkGray;
+}
+
+@mixin media-query($size) {
+    @media (min-width: map-get($mediaBreakpoints, $size)) {
+        @content;
+    }
+}
+
+@keyframes menu-open {
+    0% {
+        transform: translate(-180%, 120%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(0%, 120%);
+        opacity: 1;
+    }
+}
+
+@keyframes menu-close {
+    0% {
+        transform: translate(0%, 120%);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-180%, 120%);
+        opacity: 0;
+    }
+}
