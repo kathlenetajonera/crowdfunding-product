@@ -2,6 +2,7 @@
 @import "./mixins";
 @import "./header";
 @import "./card";
+@import "./modal";
 
 html {
     box-sizing: border-box;
@@ -45,7 +46,6 @@ body {
     font-weight: 600;
     padding: .8rem 2rem;
     border-radius: 2rem;
-    // margin-right: .5rem;
     cursor: pointer;
     $self: &;
 
@@ -72,20 +72,12 @@ body {
         &:hover {
             background-color: transparent;
             color: $darkCyan;
-
-            .card__number--cost {
-                color: $darkCyan;
-            }
         }
     }
 
     &--cost-active {
         background-color: transparent;
         color: $darkCyan;
-
-        .card__number--cost {
-            color: $darkCyan;
-        }
     }
 }
 
@@ -103,9 +95,11 @@ body {
 .flex-wrapper {
     display: flex;
     align-items: center;
+    position: relative;
 
     &--cta {
         justify-content: center;
+        align-items: initial;
         margin-top: 1.5rem;
 
         @include media-query(tablet) {
@@ -132,56 +126,11 @@ body {
         margin: 1rem 0;
     }
 
-    &--form {
+    &--enter-pledge {
         flex-direction: column;
 
         @include media-query(tablet) {
             flex-direction: row;
-        }
-    }
-}
-
-.form {
-    &__radio-input {
-        display: none;
-    }
-
-    &__radio {
-        display: block;
-        width: 1.5rem;
-        height: 1.5rem;
-        border: 1px solid $darkGray;
-        border-radius: 50%;
-        padding: .25rem;
-        margin-right: 1rem;
-
-        &::after {
-            content: "";
-            display: block;
-            width: 100%;
-            height: 100%;
-            background-color: $moderateCyan;
-            border-radius: 50%;
-            transform: scale(0);
-            transition: transform .2s ease;
-        }
-    }
-
-    &__radio-input:checked + &__radio::after {
-        transform: scale(1);
-    }
-
-    &__pledge-input {
-        outline: none;
-        border: none;
-        width: 100%;
-        padding: 1rem 1rem 1.5rem;
-        font-family: $font-family;
-        color: $darkGray;
-        text-align: center;
-
-        @include media-query(tablet) {
-            text-align: left;
         }
     }
 }

@@ -39,6 +39,7 @@
             #{ $self }__burger--last {
                 transform: rotate(-45deg);
             }
+            
         }
 
         @include media-query(tablet) {

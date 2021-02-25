@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Crowdfunding Product Page</title>
 
     <link rel="shortcut icon" href="images/favicon-32x32.png">
@@ -47,7 +47,7 @@
             <div class="card card--text-center">
                 <img class="card__product-logo" src="images/logo-mastercraft.svg" alt="mastercraft">
 
-                <h1 class="card__title card__title--product">Mastercraft Bamboo Monitor Riser</h1>
+                <h1 class="card__title card__title--main">Mastercraft Bamboo Monitor Riser</h1>
 
                 <p class="card__text">A beautiful & handcrafted monitor stand to reduce neck and eye strain.</p>
                 
@@ -64,18 +64,14 @@
             <div class="card">
                 <div class="grid-three-col">
                     <div class="card__stats">
-                        <h1 class="card__number">
-                            $89,914
-                        </h1>
+                        <h1 class="card__number" id="total-money-raised" data-total="89914">$89,914</h1>
     
                         <p class="card__text">
                             of $100,000 backed
                         </p>
                     </div>
                     <div class="card__stats">
-                        <h1 class="card__number">
-                            5,007
-                        </h1>
+                        <h1 class="card__number" data-count="5007" id="backers-count">5007</h1>
     
                         <p class="card__text">
                             total backers
@@ -108,8 +104,8 @@
                     Featuring artisan craftsmanship, the simplicity of design creates extra desk space below your computer to allow notepads, pens, and USB sticks to be stored under the stand.
                 </p>
 
-                <div class="card__pledge-container">
-                    <div class="card__pledge-item">
+                <div class="card__item-container">
+                    <div class="card__item">
                         <div class="flex-wrapper flex-wrapper--pledge">
                             <h4 class="card__item-name">
                                 Bamboo Stand
@@ -133,7 +129,7 @@
                         </div>
                     </div>
 
-                    <div class="card__pledge-item">
+                    <div class="card__item">
                         <div class="flex-wrapper flex-wrapper--pledge">
                             <h4 class="card__item-name">
                                 Black Edition Stand
@@ -157,7 +153,7 @@
                         </div>
                     </div>
 
-                    <div class="card__pledge-item card__pledge-item--unavailable">
+                    <div class="card__item card__item--unavailable">
                         <div class="flex-wrapper flex-wrapper--pledge">
                             <h4 class="card__item-name">
                                 Mahogany Special Edition
@@ -184,123 +180,117 @@
             </div>
         </div>
 
-        <div class="card card--modal">
+        <div class="modal modal--pledge-selection">
             <div class="flex-wrapper flex-wrapper--header">
-                <h3 class="card__title">Back this project</h3>
+                <h3 class="modal__title">Back this project</h3>
 
-                <svg class="card__close" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path d="M11.314 0l2.828 2.828L9.9 7.071l4.243 4.243-2.828 2.828L7.07 9.9l-4.243 4.243L0 11.314 4.242 7.07 0 2.828 2.828 0l4.243 4.242L11.314 0z" fill="#000" fill-rule="evenodd" opacity=".4"/></svg>
+                <svg class="modal__close" width="15" height="15" xmlns="http://www.w3.org/2000/svg"><path d="M11.314 0l2.828 2.828L9.9 7.071l4.243 4.243-2.828 2.828L7.07 9.9l-4.243 4.243L0 11.314 4.242 7.07 0 2.828 2.828 0l4.243 4.242L11.314 0z" fill="#000" fill-rule="evenodd" opacity=".4"/></svg>
             </div>
 
-            <p class="card__text">Want to support us in bringing Mastercraft Bamboo Monitor Riser out in the world?</p>
+            <p class="modal__text">Want to support us in bringing Mastercraft Bamboo Monitor Riser out in the world?</p>
 
             <form action="#" class="form">
-                <div class="card__pledge-item card__pledge-item-select">
-                    <div class="flex-wrapper">
-                        <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
-                        <div class="form__radio"></div>
-
-                        <div class="flex-wrapper flex-wrapper--pledge">
-                            <h4 class="card__item-name">
-                                Pledge with no reward
-                            </h4>
-                        </div>
-                    </div>
-
-                    <p class="card__text card__text--item-desc">
-                        Choose to support us without a reward if you simply believe in our project. As a backer, you will be signed up to receive product updates via email.
-                    </p>
-
-                    <div class="card__form-input card__form-input--free">
-                        <hr class="card__modal-divider"></hr>
-
-                        <div class="flex-wrapper flex-wrapper--form">
-                            <input type="text" class="form__pledge-input" aria-label="pledge field" placeholder="Enter your pledge">
-
-                            <div class="flex-wrapper">
-                                <button class="button button--cost" data-value="25">
-                                    $ <p class="card__number card__number--cost">25</p>
-                                </button>
-        
-                                <button class="button" data-continue>Continue</button>
+                <div class="modal__item">
+                    <div class="modal__main-content">
+                        <div class="flex-wrapper">
+                            <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
+                            <div class="form__radio"></div>
+    
+                            <div class="flex-wrapper flex-wrapper--pledge">
+                                <h4 class="modal__item-name">
+                                    Pledge with no reward
+                                </h4>
                             </div>
                         </div>
+    
+                        <p class="modal__text">
+                            Choose to support us without a reward if you simply believe in our project. As a backer, you will be signed up to receive product updates via email.
+                        </p>
+                    </div>
+
+                    <hr class="modal__divider"></hr>
+
+                    <div class="modal__enter-pledge modal__enter-pledge--free">
+                        <button class="button" data-continue>Continue</button>
                     </div>
                 </div>
 
-                <div class="card__pledge-item card__pledge-item-select" id="bamboo-stand">
-                    <div class="flex-wrapper">
-                        <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
-                        <div class="form__radio"></div>
-
-                        <div class="flex-wrapper flex-wrapper--pledge">
-                            <h4 class="card__item-name">
-                                Bamboo Stand
-                            </h4>
-                            <p class="card__text card__text--pledge">
-                                Pledge $25 or more
-                            </p>
+                <div class="modal__item" id="bamboo-stand">
+                    <div class="modal__main-content">
+                        <div class="flex-wrapper">
+                            <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
+                            <div class="form__radio"></div>
+    
+                            <div class="flex-wrapper flex-wrapper--pledge">
+                                <h4 class="modal__item-name">Bamboo Stand</h4>
+                                <p class="modal__text modal__text--pledge">
+                                    Pledge $25 or more
+                                </p>
+                            </div>
+                        </div>
+    
+                        <p class="modal__text">
+                            You get an ergonomic stand made of natural bamboo. You've helped us launch our promotional campaign, and you’ll be added to a special Backer member list.
+                        </p>
+    
+                        <div class="flex-wrapper flex-wrapper--item-remaining abs-top-right">
+                            <h2 class="modal__number">101</h2>
+                            <p class="modal__text modal__text--left">left</p>
                         </div>
                     </div>
 
-                    <p class="card__text card__text--item-desc">
-                        You get an ergonomic stand made of natural bamboo. You've helped us launch our promotional campaign, and you’ll be added to a special Backer member list.
-                    </p>
-
-                    <div class="flex-wrapper flex-wrapper--item-remaining abs-top-right">
-                        <h1 class="card__number card__number--modal">101</h1>
-                        <p class="card__text card__text--left">left</p>
-                    </div>
+                    <hr class="modal__divider"></hr>
                     
-                    <div class="card__form-input">
-                        <hr class="card__modal-divider"></hr>
-
-                        <div class="flex-wrapper flex-wrapper--form">
-                            <input type="text" class="form__pledge-input" aria-label="pledge field" placeholder="Enter your pledge">
+                    <div class="modal__enter-pledge">
+                        <div class="flex-wrapper flex-wrapper--enter-pledge">
+                            <p class="modal__text">Enter your pledge</p>
 
                             <div class="flex-wrapper">
-                                <button class="button button--cost" data-value=25>
-                                    $ <p class="card__number card__number--cost">25</p>
-                                </button>
+                                <div class="flex-wrapper">
+                                    <span class="form__currency">$</span>
+                                    <input class="form__pledge-value" placeholder="25">
+                                </div>
         
                                 <button class="button" data-continue>Continue</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card__pledge-item card__pledge-item-select" id="black-edition">
-                    <div class="flex-wrapper">
-                        <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
-                        <div class="form__radio"></div>
-
-                        <div class="flex-wrapper flex-wrapper--pledge">
-                            <h4 class="card__item-name">
-                                Black Edition Stand
-                            </h4>
-                            <p class="card__text card__text--pledge">
-                                Pledge $75 or more
-                            </p>
+                <div class="modal__item" id="black-edition">
+                    <div class="modal__main-content">
+                        <div class="flex-wrapper">
+                            <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
+                            <div class="form__radio"></div>
+    
+                            <div class="flex-wrapper flex-wrapper--pledge">
+                                <h4 class="modal__item-name">Black Edition Stand</h4>
+                                <p class="modal__text modal__text--pledge">
+                                    Pledge $75 or more
+                                </p>
+                            </div>
+                        </div>
+    
+                        <p class="modal__text">
+                            You get a Black Special Edition computer stand and a personal thank you. You’ll be added to our Backer member list. Shipping is included.
+                        </p>
+    
+                        <div class="flex-wrapper flex-wrapper--item-remaining abs-top-right">
+                            <h2 class="modal__number modal__number--modal">64</h2>
+                            <p class="modal__text modal__text--left">left</p>
                         </div>
                     </div>
 
-                    <p class="card__text card__text--item-desc">
-                        You get a Black Special Edition computer stand and a personal thank you. You’ll be added to our Backer member list. Shipping is included.
-                    </p>
+                    <hr class="modal__divider"></hr>
 
-                    <div class="flex-wrapper flex-wrapper--item-remaining abs-top-right">
-                        <h1 class="card__number card__number--modal">64</h1>
-                        <p class="card__text card__text--left">left</p>
-                    </div>
-
-                    <div class="card__form-input">
-                        <hr class="card__modal-divider"></hr>
-
-                        <div class="flex-wrapper flex-wrapper--form">
-                            <input type="text" class="form__pledge-input" aria-label="pledge field" placeholder="Enter your pledge">
+                    <div class="modal__enter-pledge">
+                        <div class="flex-wrapper flex-wrapper--enter-pledge">
+                            <p class="modal__text">Enter your pledge</p>
 
                             <div class="flex-wrapper">
-                                <button class="button button--cost" data-value="75">
-                                    $ <p class="card__number card__number--cost">75</p>
-                                </button>
+                                <div class="flex-wrapper">
+                                    <span class="form__currency">$</span>
+                                    <input class="form__pledge-value" placeholder="75">
+                                </div>
         
                                 <button class="button" data-continue>Continue</button>
                             </div>
@@ -308,31 +298,40 @@
                     </div>
                 </div>
 
-                <div class="card__pledge-item card__pledge-item--unavailable card__pledge-item-select">
-                    <div class="flex-wrapper">
-                        <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
-                        <div class="form__radio"></div>
-
-                        <div class="flex-wrapper flex-wrapper--pledge">
-                            <h4 class="card__item-name">
-                                Mahogany Special Edition
-                            </h4>
-                            <p class="card__text card__text--pledge">
-                                Pledge $200 or more
-                            </p>
+                <div class="modal__item modal__item--unavailable">
+                    <div class="modal__main-content">
+                        <div class="flex-wrapper">
+                            <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
+                            <div class="form__radio"></div>
+    
+                            <div class="flex-wrapper flex-wrapper--pledge">
+                                <h4 class="modal__item-name">Mahogany Special Edition</h4>
+                                <p class="modal__text modal__text--pledge">
+                                    Pledge $200 or more
+                                </p>
+                            </div>
                         </div>
-                    </div>
-
-                    <p class="card__text card__text--item-desc">
-                        You get two Special Edition Mahogany stands, a Backer T-Shirt, and a personal thank you. You’ll be added to our Backer member list. Shipping is included.
-                    </p>
-
-                    <div class="flex-wrapper flex-wrapper--item-remaining abs-top-right">
-                        <h1 class="card__number card__number--modal">0</h1>
-                        <p class="card__text card__text--left">left</p>
+    
+                        <p class="modal__text">
+                            You get two Special Edition Mahogany stands, a Backer T-Shirt, and a personal thank you. You’ll be added to our Backer member list. Shipping is included.
+                        </p>
+    
+                        <div class="flex-wrapper flex-wrapper--item-remaining abs-top-right">
+                            <h2 class="modal__number modal__number--modal">0</h2>
+                            <p class="modal__text modal__text--left">left</p>
+                        </div>
                     </div>
                 </div>
             </form>
+        </div>
+
+        <div class="modal modal--confirmation">
+            <img src="images/icon-check.svg" alt="confirmed" class="modal__icon">
+
+            <h3 class="modal__title">Thanks for your support!</h3>
+            <p class="modal__text">Your pledge brings us one step closer to sharing Mastercraft Bamboo Monitor Riser worldwide. You will get an email once our campaign is completed.</p>
+
+            <button class="button modal__close">Got it!</button>
         </div>
     </div>
     

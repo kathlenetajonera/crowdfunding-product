@@ -4,11 +4,14 @@ const menu = document.querySelector(".nav__menu");
 const overlay = document.querySelector(".overlay");
 const bookmarkBtn = document.querySelector(".card__bookmark");
 const LOCAL_STORAGE_BOOKMARK = localStorage.getItem("isBookmarked") || [];
+const savedPledges = [];
 const rewardSelection = document.querySelectorAll("[data-selection]");
-const pledgeSelection = document.querySelectorAll(".card__pledge-item-select");
-const modal = document.querySelector(".card--modal");
-const modalClose = document.querySelector(".card__close");
 const pledgeBtn = document.querySelector("#pledgeBtn");
+const modals = document.querySelectorAll(".modal");
+const modalCloseBtns = document.querySelectorAll(".modal__close");
+const modalItems = document.querySelectorAll(".modal__item");
+const backersCount = document.querySelector("#backers-count");
+let currentCount = parseInt(backersCount.dataset.count);
 
 const disableScrolling = () => document.body.style.position = "fixed";
 const enablecrolling = () => document.body.style.position = "";
@@ -112,48 +115,15 @@ window.addEventListener("resize", () => {
     }
 })
 
-pledgeSelection.forEach(selection => {
-    selection.addEventListener("click", e => {
-        const clickedElem = e.target;
-        const tagName = clickedElem.tagName.toLowerCase();
-
-        e.preventDefault();
-
-        //prevents item deseletion when input is clicked
-        if (tagName === "input") return;
-
-        //toggles item selection
-        if (clickedElem.classList.contains("card__pledge-item")) {
-            selectPledge(clickedElem);
-        } else if (tagName === "button" && clickedElem.classList.contains("button--cost") || clickedElem.classList.contains("card__number--cost")) {
-            const pledgeCost = clickedElem.closest(".button--cost");
-            if (pledgeCost.classList.contains("button--cost-active")) {
-                removeClass("cost-active", pledgeCost);
-            } else {
-                addClass("cost-active", pledgeCost);
-            }
-        } else if (tagName === "button" && clickedElem.hasAttribute("data-continue")) {
-            const pledgeCostBtn = clickedElem.previousElementSibling;
-
-            if (pledgeCostBtn.classList.contains("button--cost-active")) {
-                const pledgeCost = pledgeCostBtn.dataset.value;
-
-                savePledge(pledgeCost);
-            } else {
-                console.log("please enter value");
-            }
-        } else {
-            const parentCard = clickedElem.closest(".card__pledge-item")
-            selectPledge(parentCard);
-        }
-    })
-})
-
 pledgeBtn.addEventListener("click", openPledgeModal)
 
-modalClose.addEventListener("click", () => {
-    removeClass("active", overlay);
-    removeClass("modal-active", modal)
+modalCloseBtns.forEach(btn => {
+    btn.addEventListener("click", e => {
+        const activeModal = btn.closest(".modal");
+
+        removeClass("active", overlay);
+        removeClass("active", activeModal);
+    })
 })
 
 rewardSelection.forEach(reward => {
@@ -166,9 +136,34 @@ rewardSelection.forEach(reward => {
     })
 })
 
+modalItems.forEach(item => {
+    item.addEventListener("click", e => {
+        const target = e.target;
+        const itemCard = target.closest(".modal__item");
+
+        if (target.classList.contains("form__pledge-value")) {
+            e.stopPropagation();
+        } else if (target.hasAttribute("data-continue")) {
+            e.preventDefault();
+            const isFree = target.parentElement.classList.contains("modal__enter-pledge--free");
+
+            if (isFree) {
+                savePledge("None", 0)
+            } else {
+                validatePledge(itemCard);
+            }
+            
+        } else {
+            selectPledge(itemCard);
+        }
+    })
+})
+
 function openPledgeModal() {
+    const pledgeSelectionModal = Array.from(modals).find(modal => modal.classList.contains("modal--pledge-selection"));
+
     addClass("active", overlay);
-    addClass("modal-active", modal);
+    addClass("active", pledgeSelectionModal);
 }
 
 function selectPledge(selectedItem) {
@@ -179,12 +174,12 @@ function selectPledge(selectedItem) {
     if (isChecked) {
         radioInput.checked = false;
         removeClass("selected", selectedItem);
-        removeClass("cost-active", pledgeCostBtn);
+        // removeClass("cost-active", pledgeCostBtn);
     } else {
         radioInput.checked = true;
 
         //removes selected class on all items
-        pledgeSelection.forEach(item => {
+        modalItems.forEach(item => {
             removeClass("selected", item);
         })
 
@@ -192,6 +187,83 @@ function selectPledge(selectedItem) {
     }
 }
 
-function savePledge(cost) {
-    console.log(cost);
+function validatePledge(item) {
+    const itemName = item.querySelector(".modal__item-name").textContent;
+    const pledgeValue = item.querySelector(".form__pledge-value").value;
+    const pledgeMinimum = parseInt(item.querySelector(".form__pledge-value").placeholder)
+    const numberPattern = /^(\d{1,6})$/;
+
+    if (numberPattern.test(pledgeValue)) {
+        if (parseInt(pledgeValue) >= pledgeMinimum) {
+            savePledge(itemName, pledgeValue)
+        } else {
+            console.log("short");
+        }
+    } else {
+        console.log("error");
+    }
+}
+
+function savePledge(item, value) {
+    const pledge = {
+        id: generateID(),
+        date: Date.now(),
+        item: item,
+        pledgeValue: value
+    }
+
+    savedPledges.push(pledge)
+    // console.log(savedPledges);
+
+    displayConfirmation();
+    updateBackersCount();
+    updateTotalMoneyRaised(value);
+}
+
+function displayConfirmation() {
+    const modalSelection = document.querySelector(".modal--pledge-selection");
+    const modalConfirmation = document.querySelector(".modal--confirmation");
+
+    removeClass("active", modalSelection);
+    addClass("active", modalConfirmation);
+}
+
+function updateBackersCount() {
+    const numberFormat = new Intl.NumberFormat("en");
+
+    currentCount++;
+
+    backersCount.textContent = numberFormat.format(currentCount);
+}
+
+const totalMoneyRaised = document.querySelector("#total-money-raised");
+let currentTotal = parseInt(totalMoneyRaised.dataset.total);
+
+function updateTotalMoneyRaised(value) {
+    const pledgeAmount = parseInt(value);
+    const currencyFormat = new Intl.NumberFormat("en", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+    });
+
+    currentTotal += pledgeAmount;
+
+    totalMoneyRaised.textContent = currencyFormat.format(currentTotal);
+
+    //di nagrereflect yung bagong total sa data-total
+}
+
+function generateID() {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const charsArr = chars.split("");
+    const randomIndex = () => Math.floor(Math.random() * charsArr.length);
+    let uniqueID = "";
+
+    for (i=0; i<6; i++) {
+        const index = randomIndex();
+        uniqueID += charsArr[index];
+    }
+
+    return uniqueID;
 }
