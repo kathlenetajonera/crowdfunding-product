@@ -71,7 +71,7 @@
                         </p>
                     </div>
                     <div class="card__stats">
-                        <h1 class="card__number" data-count="5007" id="backers-count">5007</h1>
+                        <h1 class="card__number" data-count="5007" id="backers-count">5,007</h1>
     
                         <p class="card__text">
                             total backers
@@ -125,7 +125,7 @@
                                 <p class="card__text card__text--left">left</p>
                             </div>
 
-                            <button class="button" data-selection data-target="bamboo-stand">Select Reward</button>
+                            <button class="button" data-select-reward data-target="bamboo-stand">Select Reward</button>
                         </div>
                     </div>
 
@@ -149,7 +149,7 @@
                                 <p class="card__text card__text--left">left</p>
                             </div>
 
-                            <button class="button" data-selection data-target="black-edition">Select Reward</button>
+                            <button class="button" data-select-reward data-target="black-edition">Select Reward</button>
                         </div>
                     </div>
 
@@ -173,7 +173,7 @@
                                 <p class="card__text card__text--left">left</p>
                             </div>
 
-                            <button class="button button--unavailable" data-selection data-target="mahogany">Out of Stock</button>
+                            <button class="button button--unavailable" data-select-reward data-target="mahogany">Out of Stock</button>
                         </div>
                     </div>
                 </div>
@@ -190,7 +190,7 @@
             <p class="modal__text">Want to support us in bringing Mastercraft Bamboo Monitor Riser out in the world?</p>
 
             <form action="#" class="form">
-                <div class="modal__item">
+                <div class="modal__item modal__item--free">
                     <div class="modal__main-content">
                         <div class="flex-wrapper">
                             <input type="radio" name="pledge selection" class="form__radio-input" aria-label="selection">
@@ -203,7 +203,7 @@
                             </div>
                         </div>
     
-                        <p class="modal__text">
+                        <p class="modal__text modal__text--item">
                             Choose to support us without a reward if you simply believe in our project. As a backer, you will be signed up to receive product updates via email.
                         </p>
                     </div>
@@ -229,7 +229,7 @@
                             </div>
                         </div>
     
-                        <p class="modal__text">
+                        <p class="modal__text modal__text--item">
                             You get an ergonomic stand made of natural bamboo. You've helped us launch our promotional campaign, and you’ll be added to a special Backer member list.
                         </p>
     
@@ -243,7 +243,7 @@
                     
                     <div class="modal__enter-pledge">
                         <div class="flex-wrapper flex-wrapper--enter-pledge">
-                            <p class="modal__text">Enter your pledge</p>
+                            <p class="modal__text" data-enter-pledge>Enter your pledge</p>
 
                             <div class="flex-wrapper">
                                 <div class="flex-wrapper">
@@ -270,7 +270,7 @@
                             </div>
                         </div>
     
-                        <p class="modal__text">
+                        <p class="modal__text modal__text--item">
                             You get a Black Special Edition computer stand and a personal thank you. You’ll be added to our Backer member list. Shipping is included.
                         </p>
     
@@ -284,7 +284,7 @@
 
                     <div class="modal__enter-pledge">
                         <div class="flex-wrapper flex-wrapper--enter-pledge">
-                            <p class="modal__text">Enter your pledge</p>
+                            <p class="modal__text" data-enter-pledge>Enter your pledge</p>
 
                             <div class="flex-wrapper">
                                 <div class="flex-wrapper">
@@ -312,7 +312,7 @@
                             </div>
                         </div>
     
-                        <p class="modal__text">
+                        <p class="modal__text modal__text--item">
                             You get two Special Edition Mahogany stands, a Backer T-Shirt, and a personal thank you. You’ll be added to our Backer member list. Shipping is included.
                         </p>
     
@@ -333,6 +333,11 @@
 
             <button class="button modal__close">Got it!</button>
         </div>
+    </div>
+
+    <div class="attribution">
+        Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+        Coded by <a href="#">Kathlene Tajonera</a>.
     </div>
     
 </body>

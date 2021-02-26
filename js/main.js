@@ -1,17 +1,19 @@
-const navbar = document.querySelector(".nav");
 const navicon = document.querySelector(".nav__toggle");
 const menu = document.querySelector(".nav__menu");
 const overlay = document.querySelector(".overlay");
 const bookmarkBtn = document.querySelector(".card__bookmark");
 const LOCAL_STORAGE_BOOKMARK = localStorage.getItem("isBookmarked") || [];
 const savedPledges = [];
-const rewardSelection = document.querySelectorAll("[data-selection]");
+const rewardSelection = document.querySelectorAll("[data-select-reward]");
 const pledgeBtn = document.querySelector("#pledgeBtn");
 const modals = document.querySelectorAll(".modal");
 const modalCloseBtns = document.querySelectorAll(".modal__close");
 const modalItems = document.querySelectorAll(".modal__item");
 const backersCount = document.querySelector("#backers-count");
 let currentCount = parseInt(backersCount.dataset.count);
+const totalMoneyRaised = document.querySelector("#total-money-raised");
+let currentTotal = parseInt(totalMoneyRaised.dataset.total);
+const progressBar = document.querySelector(".card__progress");
 
 const disableScrolling = () => document.body.style.position = "fixed";
 const enablecrolling = () => document.body.style.position = "";
@@ -20,7 +22,85 @@ let windowWidth = window.innerWidth;
 navicon.addEventListener("click", toggleMobileMenu);
 bookmarkBtn.addEventListener("click", updateBookmark);
 
+pledgeBtn.addEventListener("click", openPledgeModal);
+
+rewardSelection.forEach(reward => {
+    reward.addEventListener("click", () => {
+        const target = reward.dataset.target;
+        const targetItem = document.getElementById(target);
+
+        openPledgeModal();
+        selectPledge(targetItem);
+        smoothScroll(targetItem);
+    })
+})
+
+modalItems.forEach(item => {
+    item.addEventListener("click", e => {
+        const target = e.target;
+        const itemCard = target.closest(".modal__item");
+
+        if (target.classList.contains("form__pledge-value")) {
+            e.stopPropagation();
+
+            //handles enter key
+            target.addEventListener("keydown", e => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    validatePledge(itemCard);
+                }
+            })
+        } else if (target.hasAttribute("data-enter-pledge")) {
+            const inputField = item.querySelector(".form__pledge-value");
+
+            inputField.focus();
+        } else if (target.hasAttribute("data-continue")) {
+            e.preventDefault();
+            const isFree = target.parentElement.classList.contains("modal__enter-pledge--free");
+
+            if (isFree) {
+                savePledge("None", "0");
+                deselectPledge(itemCard);
+            } else {
+                validatePledge(itemCard);
+            }
+            
+        } else {
+            selectPledge(itemCard);
+        }
+    })
+})
+
+modalCloseBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const activeModal = btn.closest(".modal");
+
+        removeClass("active", overlay);
+        removeClass("active", activeModal);
+    })
+})
+
+window.addEventListener("resize", () => {
+    if (windowWidth != window.innerWidth) {
+        windowWidth = window.innerWidth;
+
+        if (windowWidth > 768) {
+            if (navicon.classList.contains("nav__toggle--active")) {
+                removeClass("active", navicon);
+                removeClass("open", menu);
+                removeClass("menu-active", overlay);
+    
+                navicon.setAttribute("aria-expanded", "false");
+                enablecrolling();
+            }
+        }
+    }
+})
+
 checkStorage();
+updateProgressBar();
 
 function toggleMobileMenu() {
     const isOpen = navicon.getAttribute("aria-expanded");
@@ -28,14 +108,14 @@ function toggleMobileMenu() {
     if (isOpen === "true") {
         animateMobileMenu("close");
         removeClass("active", navicon);
-        removeClass("active", overlay);
+        removeClass("menu-active", overlay);
 
         navicon.setAttribute("aria-expanded", "false");
         enablecrolling();
     } else {
         animateMobileMenu("open");
         addClass("active", navicon);
-        addClass("active", overlay);
+        addClass("menu-active", overlay);
         
         navicon.setAttribute("aria-expanded", "true");
         disableScrolling();
@@ -92,73 +172,6 @@ function removeClass(className, element) {
     element.classList.remove(`${blockName}--${className}`)
 }
 
-function checkStorage() {
-    if (LOCAL_STORAGE_BOOKMARK) {
-        if (LOCAL_STORAGE_BOOKMARK === "true") {
-            addClass("active", bookmarkBtn);
-        }
-    }
-}
-
-window.addEventListener("resize", () => {
-    if (windowWidth != window.innerWidth) {
-        windowWidth = window.innerWidth;
-
-        if (windowWidth > 768) {
-            removeClass("active", navicon);
-            removeClass("open", menu);
-            removeClass("active", overlay);
-
-            navicon.setAttribute("aria-expanded", "false");
-            enablecrolling();
-        }
-    }
-})
-
-pledgeBtn.addEventListener("click", openPledgeModal)
-
-modalCloseBtns.forEach(btn => {
-    btn.addEventListener("click", e => {
-        const activeModal = btn.closest(".modal");
-
-        removeClass("active", overlay);
-        removeClass("active", activeModal);
-    })
-})
-
-rewardSelection.forEach(reward => {
-    reward.addEventListener("click", () => {
-        const target = reward.dataset.target;
-        const targetItem = document.getElementById(target);
-
-        openPledgeModal();
-        selectPledge(targetItem);
-    })
-})
-
-modalItems.forEach(item => {
-    item.addEventListener("click", e => {
-        const target = e.target;
-        const itemCard = target.closest(".modal__item");
-
-        if (target.classList.contains("form__pledge-value")) {
-            e.stopPropagation();
-        } else if (target.hasAttribute("data-continue")) {
-            e.preventDefault();
-            const isFree = target.parentElement.classList.contains("modal__enter-pledge--free");
-
-            if (isFree) {
-                savePledge("None", 0)
-            } else {
-                validatePledge(itemCard);
-            }
-            
-        } else {
-            selectPledge(itemCard);
-        }
-    })
-})
-
 function openPledgeModal() {
     const pledgeSelectionModal = Array.from(modals).find(modal => modal.classList.contains("modal--pledge-selection"));
 
@@ -167,16 +180,13 @@ function openPledgeModal() {
 }
 
 function selectPledge(selectedItem) {
-    const radioInput = selectedItem.querySelector(".form__radio-input");
-    const pledgeCostBtn = selectedItem.querySelector(".button--cost");
-    const isChecked = radioInput.checked;
+    const radioBtn = selectedItem.querySelector(".form__radio-input");
+    const isChecked = radioBtn.checked;
 
     if (isChecked) {
-        radioInput.checked = false;
-        removeClass("selected", selectedItem);
-        // removeClass("cost-active", pledgeCostBtn);
+        deselectPledge(selectedItem);
     } else {
-        radioInput.checked = true;
+        radioBtn.checked = true;
 
         //removes selected class on all items
         modalItems.forEach(item => {
@@ -187,15 +197,31 @@ function selectPledge(selectedItem) {
     }
 }
 
+function deselectPledge(item) {
+    const radioBtn = item.querySelector(".form__radio-input");
+    const inputField = item.querySelector(".form__pledge-value");
+
+    modalItems.forEach(item => {
+        removeClass("selected", item);
+    })
+
+    radioBtn.checked = false;
+    
+    if (!item.classList.contains("modal__item--free")) {
+        inputField.value = "";
+    }
+}
+
 function validatePledge(item) {
     const itemName = item.querySelector(".modal__item-name").textContent;
-    const pledgeValue = item.querySelector(".form__pledge-value").value;
-    const pledgeMinimum = parseInt(item.querySelector(".form__pledge-value").placeholder)
+    const inputField = item.querySelector(".form__pledge-value");
+    const pledgeMinimum = item.querySelector(".form__pledge-value").placeholder;
     const numberPattern = /^(\d{1,6})$/;
 
-    if (numberPattern.test(pledgeValue)) {
-        if (parseInt(pledgeValue) >= pledgeMinimum) {
-            savePledge(itemName, pledgeValue)
+    if (numberPattern.test(inputField.value)) {
+        if (parseInt(inputField.value) >= parseInt(pledgeMinimum)) {
+            savePledge(itemName, inputField.value);
+            deselectPledge(item);
         } else {
             console.log("short");
         }
@@ -207,13 +233,13 @@ function validatePledge(item) {
 function savePledge(item, value) {
     const pledge = {
         id: generateID(),
-        date: Date.now(),
+        date: new Date().toLocaleString(),
         item: item,
         pledgeValue: value
     }
 
     savedPledges.push(pledge)
-    // console.log(savedPledges);
+    console.log(savedPledges);
 
     displayConfirmation();
     updateBackersCount();
@@ -232,26 +258,44 @@ function updateBackersCount() {
     const numberFormat = new Intl.NumberFormat("en");
 
     currentCount++;
+    backersCount.setAttribute("data-count", currentCount)
 
     backersCount.textContent = numberFormat.format(currentCount);
 }
 
-const totalMoneyRaised = document.querySelector("#total-money-raised");
-let currentTotal = parseInt(totalMoneyRaised.dataset.total);
-
 function updateTotalMoneyRaised(value) {
+    const targetAmount = 100000;
     const pledgeAmount = parseInt(value);
     const currencyFormat = new Intl.NumberFormat("en", {
         style: "currency",
         currency: "USD",
+        minimumFractionDigits: 0,
         maximumFractionDigits: 0
     });
 
-    currentTotal += pledgeAmount;
+    if (currentTotal < targetAmount) {
+        currentTotal += pledgeAmount;
+        totalMoneyRaised.setAttribute("data-total", currentTotal);
 
-    totalMoneyRaised.textContent = currencyFormat.format(currentTotal);
+        totalMoneyRaised.textContent = currencyFormat.format(currentTotal);
+    }
 
-    //di nagrereflect yung bagong total sa data-total
+    updateProgressBar();
+}
+
+function updateProgressBar() {
+    const targetAmount = 100000;
+    const progress = Math.floor((currentTotal / targetAmount) * 100);
+
+    progressBar.style.width = progress + "%";
+}
+
+function checkStorage() {
+    if (LOCAL_STORAGE_BOOKMARK) {
+        if (LOCAL_STORAGE_BOOKMARK === "true") {
+            addClass("active", bookmarkBtn);
+        }
+    }
 }
 
 function generateID() {
@@ -266,4 +310,35 @@ function generateID() {
     }
 
     return uniqueID;
+}
+
+function smoothScroll(target) {
+    const targetSection = target;
+    const targetPosition = (targetSection.getBoundingClientRect().top + window.pageYOffset) - 100; // minus 100 to have space at the top
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 800;
+    let startTime;
+
+    function animation(currentTime) {
+        if (startTime === undefined) startTime = currentTime;
+
+        const timeElapsed =  currentTime - startTime;
+        let scroll = ease(timeElapsed, startPosition, distance, duration);
+
+        window.scrollTo(0, scroll);
+
+        if (timeElapsed < duration) {
+            requestAnimationFrame(animation);
+        }
+    }
+
+    function ease(t, b, c, d) {
+        t /= d/2;
+        if (t < 1) return c/2*t*t + b;
+        t--;
+        return -c/2 * (t*(t-2) - 1) + b;
+    };
+
+    requestAnimationFrame(animation);
 }

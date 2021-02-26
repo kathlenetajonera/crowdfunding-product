@@ -17,6 +17,27 @@ body {
     box-sizing: inherit;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    // transition: .2s ease;
+    background: $black;
+
+    &--menu-active {
+        opacity: .6;
+        z-index: 1;
+    }
+
+    &--active {
+        opacity: .6;
+        z-index: 2;
+    }
+}
+
 .container {
     background-color: $lightGray;
     padding: 1.5rem;
@@ -131,6 +152,7 @@ body {
 
         @include media-query(tablet) {
             flex-direction: row;
+            justify-content: space-between;
         }
     }
 }
@@ -143,4 +165,13 @@ body {
         top: 1rem;
         right: 2rem;
     }
+}
+
+.attribution {
+    font-family: $font-family;
+    font-size: 11px;
+    text-align: center;
+    padding: 1rem 0;
+
+    a { color: #3e52a3; }
 }

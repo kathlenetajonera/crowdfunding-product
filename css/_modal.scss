@@ -1,16 +1,20 @@
 .modal {
     background-color: $white;
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
     border-radius: .5rem;   
-    width: Min(44.75rem, 90%);
     display: none;
     $self: &;
+
+    @include media-query(tablet) {
+        padding: 3rem;
+    }
 
     &--pledge-selection {
         position: absolute;
         top: 8rem;
         left: 50%;
         transform: translateX(-50%);
+        width: Min(44.75rem, 90%);
     }
 
     &--confirmation {
@@ -19,6 +23,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        width: Min(33.75rem, 90%);
     }
 
     &--active {
@@ -28,19 +33,40 @@
 
     &__title {
         @include heading();
+        margin: 0;
+
+        @include media-query(tablet) {
+            font-size: 1.5rem;
+        }
     }
 
     &__text {
         @include bodyText();
         margin-bottom: 1.5rem;
+        font-size: .88rem;
+        line-height: 1.8rem;
+
+        @include media-query(tablet) {
+            font-size: 1rem;
+        }
         
         &--pledge {
             color: $moderateCyan;
             margin: .5rem 0;
+
+            @include media-query(tablet) {
+                margin: 0 1rem;
+            }
         }
 
         &--left {
             margin: 0 0 0 .8rem;
+        }
+
+        &--item {
+            @include media-query(tablet) {
+                margin: 1.5rem 0 1.5rem 2.5rem;
+            }
         }
     }
 
@@ -51,6 +77,7 @@
     &__item {
         border: 1px solid $darkGray;
         border-radius: .5rem;
+        position: relative;
         cursor: pointer;
         
         &:not(:last-child) {
@@ -69,11 +96,15 @@
             #{ $self }__divider, #{ $self }__enter-pledge {
                 display: block;
             }
+
+            #{ $self }__text--pledge {
+                font-weight: 600;
+            }
         }
     }
 
     &__main-content {
-        padding: 1.8rem 1.8rem 1rem;
+        padding: 1.8rem 1.5rem 1rem;
     }
 
     &__item-name {
@@ -95,10 +126,18 @@
         padding: 0 1.8rem 1.8rem;
         display: none;
 
+        @include media-query(tablet) {
+            padding: 1rem 1.8rem;
+        }
+
         &--free {
             text-align: right;
             padding: 1rem 1.8rem 1.8rem;
         }
+    }
+
+    &__icon {
+        margin-bottom: 1.5rem;
     }
 }
 
@@ -137,7 +176,8 @@
         font-family: $font-family;
         font-size: 1rem;
         font-weight: 600;
-        padding: .8rem 2rem;
+        // padding: .8rem 2rem;
+        padding: .8rem .8rem .8rem 2rem;
         margin-right: .8rem;
         border-radius: 2rem;
         border: 1px solid $darkGray;

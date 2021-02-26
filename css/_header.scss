@@ -16,7 +16,7 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
-    z-index: 999;
+    z-index: 2;
     width: Min(68.75rem, 100%);
     margin: 0 auto;
     $self: &;
@@ -138,34 +138,5 @@
             color: $white;
             font-size: .9rem;
         }
-    }
-
-    // &--active {
-    //     #{ $self }__burger--first {
-    //         transform: rotate(45deg);
-    //     }
-
-    //     #{ $self }__burger--mid {
-    //         opacity: 0;
-    //     }
-    //     #{ $self }__burger--last {
-    //         transform: rotate(-45deg);
-    //     }
-    // }
-}
-
-.overlay {
-    opacity: 0;
-    transition: .2s ease;
-
-    &--active {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: linear-gradient(to bottom, $black, $white);
-        opacity: .6;
-        z-index: 1;
     }
 }
