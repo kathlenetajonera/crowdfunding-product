@@ -448,6 +448,7 @@
   padding: 2rem 1.5rem;
   border-radius: .5rem;
   display: none;
+  cursor: default;
 }
 
 @media (min-width: 48rem) {
@@ -527,8 +528,16 @@
   }
 }
 
+.modal__text--error {
+  color: #dd0000;
+}
+
 .modal__close {
   cursor: pointer;
+}
+
+.modal__close-icon:hover {
+  opacity: 1;
 }
 
 .modal__item {
@@ -559,6 +568,10 @@
 
 .modal__item--selected .modal__text--pledge {
   font-weight: 600;
+}
+
+.modal__item:hover .modal__item-name {
+  color: #3cb4ac;
 }
 
 .modal__main-content {
@@ -648,6 +661,10 @@
   width: 6rem;
   caret-color: #3cb4ac;
   cursor: pointer;
+}
+
+.form__pledge-value:focus {
+  border: 1px solid #3cb4ac;
 }
 
 .form__currency {

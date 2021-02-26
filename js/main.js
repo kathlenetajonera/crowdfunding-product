@@ -37,7 +37,7 @@ rewardSelection.forEach(reward => {
 
 modalItems.forEach(item => {
     item.addEventListener("click", e => {
-        const target = e.target;
+        let target = e.target;
         const itemCard = target.closest(".modal__item");
 
         if (target.classList.contains("form__pledge-value")) {
@@ -55,6 +55,7 @@ modalItems.forEach(item => {
         } else if (target.hasAttribute("data-enter-pledge")) {
             const inputField = item.querySelector(".form__pledge-value");
 
+            inputField.click();
             inputField.focus();
         } else if (target.hasAttribute("data-continue")) {
             e.preventDefault();
@@ -214,19 +215,33 @@ function deselectPledge(item) {
 
 function validatePledge(item) {
     const itemName = item.querySelector(".modal__item-name").textContent;
+    const inputText = item.querySelector("[data-enter-pledge]");
     const inputField = item.querySelector(".form__pledge-value");
     const pledgeMinimum = item.querySelector(".form__pledge-value").placeholder;
     const numberPattern = /^(\d{1,6})$/;
 
     if (numberPattern.test(inputField.value)) {
         if (parseInt(inputField.value) >= parseInt(pledgeMinimum)) {
+            removeClass("error", inputText);
+            inputText.textContent = "Enter your pledge";
+
             savePledge(itemName, inputField.value);
             deselectPledge(item);
         } else {
-            console.log("short");
+            errorMessage("short");
         }
     } else {
-        console.log("error");
+        errorMessage("invalid");
+    }
+
+    function errorMessage(type) {
+        addClass("error", inputText);
+        
+        if (type === "short") {
+            inputText.textContent = `Minimum pledge amount: $${pledgeMinimum}`;
+        } else if (type === "invalid") {
+            inputText.textContent = "Please enter a valid amount";
+        }
     }
 }
 
@@ -238,12 +253,22 @@ function savePledge(item, value) {
         pledgeValue: value
     }
 
-    savedPledges.push(pledge)
-    console.log(savedPledges);
+    const targetAmount = 100000;
 
-    displayConfirmation();
-    updateBackersCount();
-    updateTotalMoneyRaised(value);
+    if (currentTotal < targetAmount) {
+        currentTotal += parseInt(value);
+
+        totalMoneyRaised.setAttribute("data-total", currentTotal);
+
+        savedPledges.push(pledge)
+        console.log(savedPledges);
+
+        displayConfirmation();
+        updateBackersCount();
+        updateTotalMoneyRaised(currentTotal);
+    } else {
+        alert("Target amount has been reached. Thanks for your support!")
+    }
 }
 
 function displayConfirmation() {
@@ -263,9 +288,7 @@ function updateBackersCount() {
     backersCount.textContent = numberFormat.format(currentCount);
 }
 
-function updateTotalMoneyRaised(value) {
-    const targetAmount = 100000;
-    const pledgeAmount = parseInt(value);
+function updateTotalMoneyRaised(total) {
     const currencyFormat = new Intl.NumberFormat("en", {
         style: "currency",
         currency: "USD",
@@ -273,12 +296,7 @@ function updateTotalMoneyRaised(value) {
         maximumFractionDigits: 0
     });
 
-    if (currentTotal < targetAmount) {
-        currentTotal += pledgeAmount;
-        totalMoneyRaised.setAttribute("data-total", currentTotal);
-
-        totalMoneyRaised.textContent = currencyFormat.format(currentTotal);
-    }
+    totalMoneyRaised.textContent = currencyFormat.format(total);
 
     updateProgressBar();
 }

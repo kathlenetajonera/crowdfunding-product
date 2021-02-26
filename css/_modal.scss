@@ -3,6 +3,7 @@
     padding: 2rem 1.5rem;
     border-radius: .5rem;   
     display: none;
+    cursor: default;
     $self: &;
 
     @include media-query(tablet) {
@@ -68,10 +69,20 @@
                 margin: 1.5rem 0 1.5rem 2.5rem;
             }
         }
+
+        &--error {
+            color: $red;
+        }
     }
 
     &__close {
         cursor: pointer;
+    }
+
+    &__close-icon {
+        &:hover {
+            opacity: 1;
+        }
     }
 
     &__item {
@@ -99,6 +110,12 @@
 
             #{ $self }__text--pledge {
                 font-weight: 600;
+            }
+        }
+
+        &:hover {
+            #{ $self }__item-name {
+                color: $moderateCyan;
             }
         }
     }
@@ -184,6 +201,10 @@
         width: 6rem;
         caret-color: $moderateCyan;
         cursor: pointer;
+
+        &:focus {
+            border: 1px solid $moderateCyan;
+        }
     }
 
     &__currency {
