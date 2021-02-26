@@ -266,6 +266,7 @@ function savePledge(item, value) {
         displayConfirmation();
         updateBackersCount();
         updateTotalMoneyRaised(currentTotal);
+        updateItemCount(item);
     } else {
         alert("Target amount has been reached. Thanks for your support!")
     }
@@ -306,6 +307,17 @@ function updateProgressBar() {
     const progress = Math.floor((currentTotal / targetAmount) * 100);
 
     progressBar.style.width = progress + "%";
+}
+
+function updateItemCount(itemName) {
+    const itemsCount = document.querySelectorAll("[data-item-count]");
+    const filteredItems = [...itemsCount].filter(item => item.dataset.itemName === itemName);
+
+    filteredItems.forEach(item => {
+        const itemsLeft = item.textContent;
+
+        item.textContent = itemsLeft - 1;
+    })
 }
 
 function checkStorage() {
